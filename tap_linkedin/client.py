@@ -3,22 +3,19 @@
 import requests
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
+from datetime import datetime
 
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
-from tap_linkedin.auth import LinkedinAuthenticator
 
 
 class LinkedinStream(RESTStream):
     """Linkedin stream class."""
 
-    url_base = "https://api.linkedin.com/v2"
+    url_base = "https://api.linkedin.com"
     default_params: Optional[dict] = None
 
-    # @property
-    # def authenticator(self) -> LinkedinAuthenticator:
-    #     """Return a new authenticator object."""
-    #     return LinkedinAuthenticator.create_for_stream(self)
+    records_jsonpath = "$.elements[*]"
 
     @property
     def http_headers(self) -> dict:
@@ -52,33 +49,24 @@ class LinkedinStream(RESTStream):
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
 
-        # print(self.default_params)
-
-        # params: dict = {}
-        # if next_page_token:
-        #     params["page"] = next_page_token
-        # if self.replication_key:
-        #     params["sort"] = "asc"
-        #     params["order_by"] = self.replication_key
+        # TODO: Set the start date of the request.
         return {**self.default_params}
-
-    def prepare_request_payload(
-        self, context: Optional[dict], next_page_token: Optional[Any]
-    ) -> Optional[dict]:
-        """Prepare the data payload for the REST API request.
-
-        By default, no payload will be sent (return None).
-        """
-        # TODO: Delete this method if no payload is required. (Most REST APIs.)
-        return None
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
-        print(response.json())
-        # # TODO: Parse response body and return a set of records.
-        # yield from extract_jsonpath(self.records_jsonpath, input=response.json())
+        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
+
+    def parse_date(self, date_millis: int) -> str:
+        # Parse milliseconds sinc epoch to a datetime object.
+        date = datetime.fromtimestamp(date_millis / 1000)
+
+        # Transform to iso format.
+        return date.isoformat()
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
         """As needed, append or transform raw data to match expected structure."""
-        # TODO: Delete this method if not needed.
+        # Parse the dates if they are present.
+        if "timeRange" in row:
+            row["date"] = self.parse_date(date_millis=row["timeRange"]["end"])
+
         return row

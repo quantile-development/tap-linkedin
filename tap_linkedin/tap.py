@@ -6,11 +6,15 @@ from singer_sdk import Tap, Stream
 from singer_sdk import typing as th  # JSON schema typing helpers
 
 from tap_linkedin.streams import (
-    FollowersStream
+    FollowersStream,
+    PageStream,
+    PostsStream
 )
 
 STREAM_TYPES = [
-    FollowersStream
+    # FollowersStream,
+    # PageStream,
+    PostsStream
 ]
 
 

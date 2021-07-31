@@ -12,8 +12,8 @@ from tap_linkedin.streams import (
 )
 
 STREAM_TYPES = [
-    # FollowersStream,
-    # PageStream,
+    FollowersStream,
+    PageStream,
     PostsStream
 ]
 

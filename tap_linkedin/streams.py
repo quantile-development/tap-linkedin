@@ -10,7 +10,7 @@ from tap_linkedin.client import LinkedinStream
 
 class FollowersStream(LinkedinStream):
     """Follower statistics of the defined company."""
-    name = "followers"
+    name = "linkedin_followers"
     path = "/v2/organizationalEntityFollowerStatistics"
     replication_key = "date"
     primary_keys = ["date"]
@@ -39,7 +39,7 @@ class FollowersStream(LinkedinStream):
 
 class PageStream(LinkedinStream):
     """Statistics of the company page."""
-    name = "page"
+    name = "linkedin_page"
     path = "/v2/organizationPageStatistics"
     replication_key = "date"
     primary_keys = ["date"]
@@ -93,7 +93,7 @@ class PageStream(LinkedinStream):
 
 class PostsStream(LinkedinStream):
     """Statistics of the posts made by the company"""
-    name = "posts"
+    name = "linkedin_posts"
     path = "/v2/organizationalEntityShareStatistics"
     replication_key = "date"
     primary_keys = ["date"]

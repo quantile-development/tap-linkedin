@@ -13,6 +13,7 @@ class FollowersStream(LinkedinStream):
     name = "followers"
     path = "/v2/organizationalEntityFollowerStatistics"
     replication_key = "date"
+    primary_keys = ["date"]
 
     schema = th.PropertiesList(
         th.Property("followerGains", th.ObjectType(
@@ -41,6 +42,7 @@ class PageStream(LinkedinStream):
     name = "page"
     path = "/v2/organizationPageStatistics"
     replication_key = "date"
+    primary_keys = ["date"]
 
     schema = th.PropertiesList(
         th.Property("totalPageStatistics", th.ObjectType(
@@ -94,6 +96,7 @@ class PostsStream(LinkedinStream):
     name = "posts"
     path = "/v2/organizationalEntityShareStatistics"
     replication_key = "date"
+    primary_keys = ["date"]
 
     schema = th.PropertiesList(
         th.Property("totalShareStatistics", th.ObjectType(
